@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FixYourPaper.id — Jasa Laporan, Makalah, PPT, dan Poster untuk Pelajar</title>
+<meta name="description" content="Jasa pengerjaan laporan, makalah, PPT, poster, dan perbaikan dokumen untuk siswa SMP, SMA, dan SMK.">
+<script>
+/* Jam Jakarta: terang 06.00-18.00, gelap 18.00-06.00. Dipasang di awal supaya tidak berkedip. */
+(function(){var d=document.documentElement;d.classList.add('js');
+var h=+new Date().toLocaleTimeString('en-GB',{timeZone:'Asia/Jakarta',hourCycle:'h23'}).slice(0,2);
+if(h>=18||h<6)d.classList.add('dark')})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<style>
+:root{--bg:#F5F0E6;--sf:#FFFBF2;--ink:#16291f;--tx:#16291f;--mu:#4a584d;--pr:#1E3B2F;--onpr:#F5F0E6;--sg:#7F8C6A;--sd:#C8B48A;--alt:#C8B48A;--ok:#276b3a;--no:#a8322a;--dot:rgba(22,41,31,.13)}
+.dark{color-scheme:dark;--bg:#0F1713;--sf:#16221B;--ink:#C8B48A;--tx:#F5F0E6;--mu:#b9bfb2;--pr:#7F8C6A;--onpr:#0F1713;--alt:#1E3B2F;--ok:#93d6a0;--no:#f19a8f;--dot:rgba(200,180,138,.11)}
+*{box-sizing:border-box;margin:0}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{font:500 16px/1.6 'Bricolage Grotesque',system-ui,sans-serif;background:var(--bg) radial-gradient(var(--dot) 1px,transparent 1px) 0 0/22px 22px;color:var(--tx);overflow-x:hidden;transition:background-color .3s,color .3s}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.wrap{max-width:1120px;margin:auto;padding:0 20px}
+h1,h2,h3{font-weight:800;line-height:1.08;letter-spacing:-.02em}
+h1{font-size:clamp(2.3rem,6vw,4.4rem)}
+h2{font-size:clamp(1.9rem,4vw,2.8rem)}
+h3{font-size:1.25rem;letter-spacing:-.01em}
+small,.sm{font-size:13.5px}
+.bx{background:var(--sf);border:3px solid var(--ink);box-shadow:6px 6px 0 var(--ink)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 20px;font-weight:800;background:var(--pr);color:var(--onpr);border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);cursor:pointer;text-decoration:none;transition:transform .12s,box-shadow .12s}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+.btn.sand{background:var(--sd);color:#16291f}
+.btn:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:4px 4px 0 var(--ink)}
+.ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* bar jam */
+.top{background:var(--pr);color:var(--onpr);font-size:13.5px;font-weight:700;padding:7px 0;border-bottom:3px solid var(--ink)}
+.top .wrap{display:flex;justify-content:space-between;gap:4px 24px;flex-wrap:wrap}
+#tm{font-variant-numeric:tabular-nums}
+
+/* navbar */
+nav{position:sticky;top:0;z-index:40;background:var(--bg);border-bottom:3px solid var(--ink)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:68px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.2rem;letter-spacing:-.02em;color:inherit;text-decoration:none}
+.logo img{height:40px;width:auto;display:block}
+.mark{display:grid;place-items:center;width:40px;height:40px;background:var(--pr);color:var(--onpr);border:3px solid var(--ink);font-size:.95rem}
+.links{display:flex;gap:22px;font-weight:700}
+.links a{color:inherit;text-decoration:none}
+.links a:hover{text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:5px}
+.act{display:flex;gap:12px;align-items:center}
+.tg{padding:9px}
+@media(max-width:480px){.act .pn{display:none}}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1.15fr 1fr;gap:56px;align-items:center;padding:72px 0 80px}
+.hero p.lead{font-size:1.15rem;max-width:34em;margin:22px 0 28px}
+.hero .cta{display:flex;flex-wrap:wrap;gap:16px}
+.hero .fine{margin-top:22px;color:var(--mu)}
+@media(max-width:860px){.hero{grid-template-columns:1fr;gap:40px;padding:48px 0 56px}}
+
+/* papan slot */
+.board{padding:22px 24px;transform:rotate(1deg)}
+.bh{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-bottom:14px;border-bottom:3px solid var(--ink)}
+.live{display:flex;align-items:center;gap:8px;font-weight:800;font-size:13.5px}
+.live i{width:11px;height:11px;border-radius:50%;background:var(--ok);border:2px solid var(--ink)}
+.row{display:grid;grid-template-columns:1fr auto;gap:4px 14px;padding:13px 0;border-top:2px dashed var(--ink)}
+.row:first-child{border-top:0}
+.row b{font-weight:800}
+.sq{display:flex;gap:4px;align-items:center}
+.sq i{width:18px;height:18px;border:2.5px solid var(--ink)}
+.sq i.f{background:var(--ink)}
+.row .s{grid-column:1/-1;font-size:13.5px;font-weight:700}
+.ok{color:var(--ok)}.no{color:var(--no)}
+.note{font-size:13.5px;color:var(--mu);padding-top:14px;border-top:3px solid var(--ink)}
+
+/* section */
+section{padding:80px 0}
+.alt{background:var(--alt);border-block:3px solid var(--ink)}
+.sh{max-width:36em;margin-bottom:40px}
+.sh p{margin-top:12px;color:var(--mu)}
+.alt .sh p{color:inherit}
+.g{display:grid;gap:24px}
+.g4{grid-template-columns:repeat(auto-fit,minmax(min(100%,235px),1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr))}
+.card{padding:24px;display:flex;flex-direction:column;gap:12px}
+.card .btn{margin-top:auto}
+.price{font-size:2rem;font-weight:800;line-height:1.1}
+.price small{display:block;margin-top:6px;font-size:.9rem;font-weight:700;line-height:1.3}
+.card p{color:var(--mu)}
+.meta{font-weight:700;font-size:13.5px;padding-top:12px;border-top:2px dashed var(--ink)}
+.tabs{display:flex;gap:12px;margin-bottom:28px;flex-wrap:wrap}
+.tabs button{padding:11px 20px;font-weight:800;background:var(--sf);border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink);cursor:pointer}
+.tabs button[aria-selected=true]{background:var(--pr);color:var(--onpr)}
+.fm ul{margin:12px 0 0;padding-left:18px;display:grid;gap:8px}
+.fm{padding:24px}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;padding:22px}
+.steps li::before{content:counter(s);display:grid;place-items:center;width:38px;height:38px;margin-bottom:12px;background:var(--pr);color:var(--onpr);border:3px solid var(--ink);font-weight:800}
+.steps b{display:block;font-size:1.1rem;margin-bottom:4px}
+.steps span{color:var(--mu)}
+
+/* form */
+.fw{max-width:820px;padding:32px}
+form{display:grid;gap:20px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:640px){.two{grid-template-columns:1fr}.fw{padding:22px}}
+label{display:block;font-weight:800;margin-bottom:6px}
+input,select,textarea{width:100%;padding:11px 12px;background:var(--bg);border:3px solid var(--ink);border-radius:0}
+.stp{display:flex;border:3px solid var(--ink);background:var(--bg)}
+.stp input{border:0;text-align:center;font-weight:800;min-width:0}
+.stp button{width:48px;border:0;background:var(--sd);color:#16291f;font-weight:800;font-size:1.3rem;cursor:pointer}
+.hint{font-size:13.5px;color:var(--mu);margin-top:6px}
+.tot{background:var(--sd);color:#16291f;border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);padding:18px 20px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.tot strong{font-size:2.3rem;line-height:1.1;display:block}
+.al{background:#eba59d;color:#16291f;border:3px solid var(--ink);padding:12px 14px;font-weight:700}
+
+/* faq */
+.faq{max-width:780px}
+details{background:var(--sf);border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);padding:16px 18px;margin-bottom:18px}
+summary{cursor:pointer;font-weight:800;display:flex;justify-content:space-between;gap:12px;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::after{content:'+';font-size:1.5rem;line-height:1}
+details[open] summary::after{content:'−'}
+details p{margin-top:10px;padding-top:10px;border-top:2px dashed var(--ink);color:var(--mu)}
+
+footer{background:var(--sf);border-top:3px solid var(--ink);padding:40px 0}
+footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+footer p{color:var(--mu);font-size:14px;max-width:28em;margin-top:6px}
+.wa{position:fixed;right:20px;bottom:20px;z-index:50;width:56px;height:56px;padding:0;border-radius:50%;background:#2f7d46;color:#fff}
+.wa .ic{width:26px;height:26px}
+#end{display:block;height:1px}
+
+/* animasi: kata naik satu per satu, blok naik halus. Hanya transform & opacity. */
+.w{display:inline-block;overflow:hidden;vertical-align:top;padding:.1em 0;margin:-.1em 0}
+.js .w>span{display:inline-block;transform:translateY(112%);transition:transform .65s cubic-bezier(.2,.8,.2,1);transition-delay:calc(var(--i)*60ms)}
+.js .on .w>span,.js .w.on>span{transform:none}
+.js .rv{opacity:0;transform:translateY(24px);transition:opacity .5s,transform .6s cubic-bezier(.2,.8,.2,1);transition-delay:calc(var(--d,0)*90ms)}
+.js .rv.on{opacity:1;transform:none}
+.js .board.rv.on{transform:rotate(1deg)}
+.js .board.rv{transform:translateY(24px) rotate(1deg)}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.js .w>span,.js .rv{transition:none;transform:none;opacity:1}.js .board.rv{transform:rotate(1deg)}}
+
+/* menu mobile */
+.mb{display:none;padding:9px}
+@media(max-width:1000px){
+.mb{display:inline-flex}
+.links{display:none;position:absolute;top:100%;left:0;right:0;background:var(--bg);border-bottom:3px solid var(--ink);flex-direction:column;gap:0;padding:4px 20px 10px}
+.links.open{display:flex}
+.links a{padding:14px 0;border-bottom:2px dashed var(--ink)}
+.links a:last-child{border:0}}
+
+/* tarif bertingkat */
+.tiers{list-style:none;padding:0;display:grid;gap:4px;font-size:13.5px;font-weight:700}
+.tiers li{display:flex;justify-content:space-between;gap:10px}
+.tiers li:last-child{font-weight:500;color:var(--mu)}
+
+/* testimoni */
+.tm{grid-template-columns:1fr 1.25fr;align-items:start}
+.soon,.rvb{padding:24px}
+.tag{display:inline-block;font-weight:800;font-size:13.5px;padding:3px 10px;border:3px solid var(--ink);background:var(--sd);color:#16291f}
+.shots{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+.shots i{aspect-ratio:3/4;border:3px dashed var(--ink);display:block}
+.stars{display:flex;gap:2px}
+.stars button{background:none;border:0;padding:2px 3px;font-size:2rem;line-height:1;cursor:pointer;color:var(--tx)}
+.rvi{padding:14px 0;border-top:2px dashed var(--ink)}
+.rvh{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.rvi p{margin-top:4px;color:var(--mu);overflow-wrap:anywhere}
+.st{letter-spacing:2px}
+.hp{position:absolute;left:-9999px}
+#rvf{display:grid;gap:12px}
+
+/* struk */
+html:has(dialog[open]){overflow:hidden}
+dialog{border:0;padding:0;background:transparent;max-width:none;width:min(420px,calc(100vw - 24px));margin:auto;color:var(--tx);overflow:visible}
+dialog::backdrop{background:rgba(10,16,12,.74)}
+.rcw{max-height:calc(100dvh - 20px);overflow:auto;overscroll-behavior:contain;padding:4px 8px 10px}
+.slot{height:16px;background:var(--ink);border-radius:8px;position:relative;z-index:2}
+.pw{margin:-4px 10px 0;overflow:hidden;filter:drop-shadow(4px 4px 0 var(--ink))}
+.paper{position:relative;background:#FBF7EC;color:#16291f;padding:22px 20px 34px;font:14px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;border:3px solid #16291f;border-bottom:0;-webkit-mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 50%/16px 100%;mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 50%/16px 100%;animation:print 1.1s cubic-bezier(.3,.7,.2,1) both}
+@keyframes print{from{transform:translateY(-100%)}to{transform:none}}
+.rh{display:grid;gap:2px}
+.rh b{font-size:1.15rem;font-family:'Bricolage Grotesque',system-ui,sans-serif}
+.rh small{color:#4a584d}
+.dsh{border:0;border-top:2px dashed #16291f;margin:12px 0}
+.ln,.tl{display:flex;justify-content:space-between;gap:14px;opacity:0;animation:ln .4s both;animation-delay:calc(.55s + var(--n)*90ms)}
+@keyframes ln{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.ln span{color:#4a584d}
+.ln b{text-align:right;font-weight:700;overflow-wrap:anywhere}
+.tl{align-items:baseline;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:1.7rem;font-weight:800;margin:4px 0}
+.bar{height:34px;margin-top:16px;background:repeating-linear-gradient(90deg,#16291f 0 2px,transparent 2px 5px,#16291f 5px 6px,transparent 6px 10px,#16291f 10px 13px,transparent 13px 15px)}
+.rnote{font-size:12.5px;color:#4a584d;margin-top:12px}
+.stamp{position:absolute;top:16px;right:12px;border:3px solid #a8322a;color:#a8322a;padding:1px 8px;font-weight:800;font-size:12px;text-transform:uppercase;transform:rotate(-10deg);opacity:0;animation:stamp .3s 1.9s both}
+@keyframes stamp{from{opacity:0;transform:rotate(-10deg) scale(1.9)}to{opacity:.9;transform:rotate(-10deg)}}
+.rbt{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+.rbt .btn{flex:1 1 150px}
+@media(prefers-reduced-motion:reduce){.paper,.ln,.tl,.stamp{animation:none;opacity:1}.stamp{opacity:.9}}
+
+/* responsif */
+@media(max-width:860px){.tm{grid-template-columns:1fr}.board{transform:none}.js .board.rv{transform:translateY(24px)}.js .board.rv.on{transform:none}}
+@media(prefers-reduced-motion:reduce){.js .board.rv{transform:none}}
+@media(max-width:560px){.hs{display:none}.bx{box-shadow:4px 4px 0 var(--ink)}.wrap{padding:0 16px}section{padding:56px 0}.sh{margin-bottom:28px}.hero .cta .btn{flex:1 1 100%}footer .wrap{flex-direction:column;align-items:flex-start}.soon,.rvb,.card{padding:18px}.paper{padding:20px 16px 34px;font-size:13px}.tl{font-size:1.5rem}}
+
+/* promo, link, toast, dialog format */
+.lnk{background:none;border:0;padding:0;font-weight:800;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px;cursor:pointer;color:inherit}
+.pcr{display:flex;gap:12px}
+.pcr input{flex:1;min-width:0}
+.pcr .btn{flex:none;padding:11px 16px}
+.tot s{display:block;font-size:1rem;opacity:.7}
+.rq{padding:16px 18px;margin-top:18px;line-height:1.5}
+.rq span{display:block;margin-top:4px;color:var(--mu);font-size:14px}
+.rq .rqm{color:var(--no);font-weight:700}
+.vh{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none}
+.ts{position:fixed;left:16px;right:88px;bottom:20px;z-index:60;padding:14px 16px;font-weight:700;font-size:14.5px;background:var(--sd);color:#16291f;border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink)}
+#fd{width:min(560px,calc(100vw - 24px))}
+.fdw{padding:20px;max-height:calc(100dvh - 24px);overflow:auto;overscroll-behavior:contain}
+.fdh{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+#fdc{display:grid;gap:16px}
+#fdc .bx{box-shadow:none}
+.steps{grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr))}
+
+/* lebih lega di HP */
+@media(max-width:560px){
+body{line-height:1.7}
+.wrap{padding:0 22px}
+section{padding:68px 0}
+.sh{margin-bottom:34px}
+.sh p{margin-top:16px}
+.g{gap:30px}
+.hero{gap:48px;padding:44px 0 60px}
+.hero p.lead{margin:22px 0 32px}
+.hero .cta{gap:16px}
+.card,.soon,.rvb,.steps li{padding:24px}
+.card{gap:18px}
+.card p,.tiers{line-height:1.65}
+.tiers{gap:10px;font-size:14.5px}
+.meta{padding-top:16px;line-height:1.6}
+.board{padding:24px}
+.row{padding:16px 0}
+.fw{padding:26px 22px}
+form{gap:26px}
+.two{gap:26px}
+details{padding:20px 22px;margin-bottom:22px}
+.btn{min-height:50px}
+.ts{left:12px;right:80px}
+.paper{padding:22px 18px 36px}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></symbol>
+<symbol id="i-receipt" viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></symbol>
+<symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l2-5.4A8.4 8.4 0 1 1 21 11.5z"/></symbol>
+</svg>
+
+<div class="top"><div class="wrap">
+  <span><span id="dt">Memuat tanggal…</span>, <span id="tm">--:--:--</span> WIB</span>
+  <span class="hs">Slot harian direset pukul 00.00 WIB</span>
+</div></div>
+
+<nav><div class="wrap">
+  <a class="logo" href="#">
+    <img data-logo alt="Logo FixYourPaper.id" onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+    <b class="mark" hidden>FYP</b>
+    <span>FixYourPaper.id</span>
+  </a>
+  <div class="links" id="lk">
+    <a href="#harga">Harga</a><a href="#format">Format</a><a href="#alur">Cara pesan</a><a href="#testimoni">Testimoni</a><a href="#pesan">Form pesanan</a><a href="#faq">FAQ</a>
+  </div>
+  <div class="act">
+    <button class="btn tg" id="tg" type="button" aria-label="Ganti mode terang atau gelap" title="Mode otomatis: terang 06.00–18.00 WIB"><svg class="ic"><use id="tgi" href="#i-moon"/></svg></button>
+    <a class="btn pn" href="#pesan">Pesan sekarang</a>
+    <button class="btn mb" id="mb" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="lk"><svg class="ic"><use href="#i-menu"/></svg></button>
+  </div>
+</div></nav>
+
+<main>
+<div class="wrap hero">
+  <div>
+    <h1 data-w>Laporan, makalah, PPT, dan poster dikerjakan sampai rapi.</h1>
+    <p class="lead rv" style="--d:3">Untuk siswa SMP, SMA, dan SMK. Kirim topik dan tenggatnya, kami kerjakan dengan format standar atau aturan dari gurumu. Sudah punya file tapi berantakan? Kami perbaiki.</p>
+    <div class="cta rv" style="--d:4">
+      <a class="btn" href="#pesan">Isi form pesanan</a>
+      <a class="btn sand" href="#harga">Lihat harga</a>
+    </div>
+    <p class="fine sm rv" style="--d:5">Revisi pertama gratis. Nama dan sekolahmu tidak dipublikasikan.</p>
+  </div>
+  <aside class="bx board rv" style="--d:2" aria-label="Slot pengerjaan hari ini">
+    <div class="bh"><h3>Slot hari ini</h3><span class="live"><i></i>Diperbarui langsung</span></div>
+    <div id="board"></div>
+    <p class="note">PPT tutup kalau slot makalah dan laporan penuh. Perbaikan dokumen baru buka kalau hari ini belum ada makalah atau laporan baru.</p>
+  </aside>
+</div>
+
+<section id="harga" style="padding-top:0">
+  <div class="wrap">
+    <div class="sh"><h2 data-w>Harga untuk kantong pelajar</h2><p class="rv">Biaya express (+Rp 25.000) dihitung terpisah di form pesanan.</p></div>
+    <div class="g g4">
+      <div class="bx card rv" style="--d:0">
+        <h3>Laporan dan makalah</h3>
+        <div class="price">Rp 100.000<small> / sampai 30 hal.</small></div>
+        <p>Termasuk cover, kata pengantar, daftar isi, isi, dan daftar pustaka. Lebih dari 30 halaman, harga naik per rentang 15 halaman.</p>
+        <ul class="tiers" id="tiers"></ul>
+        <div class="meta">Rentang halaman disepakati sebelum pengerjaan dan tidak ditambah tanpa persetujuanmu. Revisi pertama gratis, revisi kedua Rp 15.000.</div>
+        <a class="btn" href="#pesan" data-s="laporan">Pesan ini</a>
+      </div>
+      <div class="bx card rv" style="--d:1">
+        <h3>Presentasi PPT</h3>
+        <div class="price">Rp 3.000<small> / slide</small></div>
+        <p>Slide rapi dengan poin yang jelas dan mudah dibawakan. Hasil dalam PPTX dan PDF.</p>
+        <div class="meta">Revisi Rp 10.000 sampai disetujui</div>
+        <a class="btn" href="#pesan" data-s="ppt">Pesan ini</a>
+      </div>
+      <div class="bx card rv" style="--d:2">
+        <h3>Poster</h3>
+        <div class="price">Rp 15.000<small> / desain</small></div>
+        <p>Poster A4 atau A3 beresolusi tinggi, siap dicetak atau dikumpulkan online.</p>
+        <div class="meta">Isi mengikuti topik tugasmu</div>
+        <a class="btn" href="#pesan" data-s="poster">Pesan ini</a>
+      </div>
+      <div class="bx card rv" style="--d:3">
+        <h3>Perbaikan dokumen</h3>
+        <div class="price">Rp 15.000<small> / file</small></div>
+        <p>Margin, spasi, nomor halaman, dan daftar isi dirapikan sesuai format yang kamu mau.</p>
+        <div class="meta">Margin bawaan 4-3-3-3 (kiri, atas, kanan, bawah)</div>
+        <a class="btn" href="#pesan" data-s="rapihin">Pesan ini</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="format" class="alt">
+  <div class="wrap">
+    <div class="sh"><h2 data-w>Format bawaan kami</h2><p class="rv">Dipakai kalau kamu tidak punya aturan khusus. Kalau gurumu punya format sendiri, tulis saja di form.</p></div>
+    <div class="tabs rv" role="tablist">
+      <button type="button" role="tab" data-t="laporan" aria-selected="true">Laporan</button>
+      <button type="button" role="tab" data-t="makalah" aria-selected="false">Makalah</button>
+    </div>
+    <div class="g g3 rv" id="fmt"></div>
+  </div>
+</section>
+
+<section id="alur">
+  <div class="wrap">
+    <div class="sh"><h2 data-w>Cara pesan</h2></div>
+    <ol class="g steps">
+      <li class="bx rv" style="--d:0"><b>Isi form</b><span>Nama, jenjang, layanan, format, dan waktu pengerjaan. Masukkan kode promo kalau punya.</span></li>
+      <li class="bx rv" style="--d:1"><b>Cek struk</b><span>Ringkasan harga dan total muncul dulu. Belum ada yang terkirim.</span></li>
+      <li class="bx rv" style="--d:2"><b>Kirim ke WhatsApp</b><span>Struk terkirim lengkap dengan link konfirmasi pembayaran. Admin mengecek slot.</span></li>
+      <li class="bx rv" style="--d:3"><b>Bayar DP dan konfirmasi</b><span>Setelah DP 50%, buka link di chat, pilih "Iya", lalu unggah bukti dari galeri. Slot terisi di sini.</span></li>
+      <li class="bx rv" style="--d:4"><b>Pengerjaan dimulai</b><span>Kamu cek draf dulu. Kalau cocok, lunasi dan file final dikirim.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section id="testimoni" class="alt">
+  <div class="wrap">
+    <div class="sh"><h2 data-w>Kata pelanggan</h2><p class="rv">Ada dua bagian: tangkapan layar testimoni asli yang kami pasang sendiri, dan ulasan yang bisa kamu tulis setelah pesananmu selesai.</p></div>
+    <div class="g tm">
+      <div class="bx soon rv" style="--d:0">
+        <span class="tag">Segera hadir</span>
+        <h3 style="margin-top:12px">Testimoni asli</h3>
+        <p style="color:var(--mu);margin-top:8px">Kami sedang mengumpulkan tangkapan layar dari pelanggan yang pesanannya sudah selesai. Baru dipasang kalau mereka mengizinkan.</p>
+        <div class="shots" aria-hidden="true"><i></i><i></i><i></i></div>
+      </div>
+      <div class="bx rvb rv" style="--d:1">
+        <h3>Ulasan pelanggan</h3>
+        <p class="hint" id="rvs">Memuat ulasan…</p>
+        <div id="rvl"></div>
+        <form id="rvf" style="margin-top:18px;padding-top:18px;border-top:3px solid var(--ink)">
+          <b>Tulis ulasan</b>
+          <div class="stars" id="stars" role="radiogroup" aria-label="Jumlah bintang"></div>
+          <input id="rvn" maxlength="40" placeholder="Nama atau inisial" aria-label="Nama atau inisial">
+          <textarea id="rvc" rows="3" maxlength="300" placeholder="Ceritakan pengalamanmu" aria-label="Ulasan"></textarea>
+          <input class="hp" id="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <button class="btn" id="rvb" type="submit">Kirim ulasan</button>
+          <p class="hint" id="rvm" aria-live="polite">Ulasan tampil setelah dicek admin.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pesan">
+  <div class="wrap">
+    <div class="sh"><h2 data-w>Form pesanan</h2><p class="rv">Biaya dihitung otomatis. Kamu bisa cek ringkasan dan total dulu sebelum lanjut ke WhatsApp.</p></div>
+    <div class="bx fw rv">
+      <div id="al" class="al" role="alert" hidden style="margin-bottom:20px"></div>
+      <form id="f">
+        <div class="two">
+          <div><label for="nama">Nama (boleh inisial)</label><input id="nama" required placeholder="Contoh: Fikri, kelas 12"></div>
+          <div><label for="jen">Jenjang</label><select id="jen"><option>SMP / MTs</option><option>SMA / SMK / MA</option></select></div>
+        </div>
+        <div class="two">
+          <div><label for="svc">Layanan</label>
+            <select id="svc">
+              <option value="laporan">Laporan</option>
+              <option value="makalah">Makalah</option>
+              <option value="ppt">Presentasi PPT</option>
+              <option value="poster">Poster</option>
+              <option value="rapihin">Perbaikan dokumen</option>
+            </select></div>
+          <div><label for="ft">Format penulisan</label>
+            <select id="ft"><option value="d">Format bawaan kami</option><option value="c">Aturan dari guru atau sekolah</option></select>
+            <p class="hint">Ingin melihat format default dari kami dulu? <button type="button" class="lnk" id="fl">Klik di sini</button></p></div>
+        </div>
+        <div id="cbox" hidden><label for="cr">Aturan dari guru atau sekolah</label>
+          <textarea id="cr" rows="3" placeholder="Contoh: Arial 11 pt, margin kiri 3 cm, kanan 2,5 cm, cover warna biru"></textarea></div>
+        <div class="two">
+          <div><label for="tier" id="pgl">Perkiraan jumlah halaman</label>
+            <select id="tier"></select>
+            <div class="stp" id="stw" hidden><button type="button" id="mn" aria-label="Kurangi">−</button><input id="pg" type="number" inputmode="numeric" value="10"><button type="button" id="pl" aria-label="Tambah">+</button></div>
+            <p class="hint" id="pgh"></p></div>
+          <div><label for="sp">Waktu pengerjaan</label>
+            <select id="sp"><option value="r">Biasa, 1–2 hari</option><option value="e">Express, 4–6 jam (+Rp 25.000)</option></select></div>
+        </div>
+        <div><label for="pcd">Kode promo (kalau punya)</label>
+          <div class="pcr"><input id="pcd" autocomplete="off" maxlength="30" placeholder="Masukkan kode"><button type="button" class="btn sand" id="pca">Terapkan</button></div>
+          <p class="hint" id="pcm" aria-live="polite"></p></div>
+        <div class="tot"><div><span>Estimasi biaya</span><s id="was" hidden></s><strong id="tt">Rp 0</strong></div><span class="sm" id="trev">Revisi pertama gratis,<br>revisi kedua Rp 15.000</span></div>
+        <div>
+          <button class="btn" type="submit" id="sb" style="width:100%"><svg class="ic"><use href="#i-receipt"/></svg><span id="sbt">Lihat ringkasan pesanan</span></button>
+          <p class="hint">Slot baru terisi setelah kamu menekan konfirmasi di ringkasan.</p>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section id="faq" class="alt">
+  <div class="wrap faq">
+    <div class="sh"><h2 data-w>Pertanyaan yang sering masuk</h2></div>
+    <div class="rv"><details><summary>Bagaimana alur pesan sampai pengerjaan dimulai?</summary><p>Isi form lalu cek struk yang muncul. Kalau sudah sesuai, kirim struk ke WhatsApp. Admin mengecek slot dan meminta konfirmasi pembayaran. Kamu bayar DP, buka link di chat, pilih &quot;Iya&quot;, lalu pilih bukti pembayaran dari galeri. Setelah itu slot terisi dan pengerjaan dimulai.</p></details></div>
+    <div class="rv"><details><summary>Berapa lama pengerjaannya?</summary><p>Pengerjaan biasa memakan 1–2 hari. Express selesai dalam 4–6 jam dengan tambahan Rp 25.000.</p></details></div>
+    <div class="rv"><details><summary>Bagaimana pembayarannya?</summary><p>DP 50% dibayar di awal. Sisanya dilunasi setelah kamu melihat tangkapan layar draf dan sudah cocok. Cara bayarnya diberikan admin lewat WhatsApp.</p></details></div>
+    <div class="rv"><details><summary>Kenapa harus konfirmasi pembayaran dan unggah bukti di situs?</summary><p>Supaya slot tidak habis oleh pesanan yang akhirnya tidak jadi. Slot baru terisi setelah kamu memilih &quot;Iya&quot; dan memilih bukti pembayaran. Kalau memilih &quot;Belum&quot;, pesanan dan kode promo direset.</p></details></div>
+    <div class="rv"><details><summary>Bagaimana cara kerja slot harian?</summary><p>Setiap hari tersedia 2 slot makalah dan laporan, 2 slot PPT, 3 slot poster, dan 5 slot perbaikan dokumen. PPT tutup kalau slot makalah dan laporan penuh. Perbaikan dokumen hanya buka kalau hari itu belum ada pesanan makalah atau laporan baru. Semua slot direset pukul 00.00 WIB.</p></details></div>
+    <div class="rv"><details><summary>Bagaimana kalau halamannya jadi lebih banyak dari rentang yang dipilih?</summary><p>Rentang halaman disepakati dengan admin sebelum DP, dan kami mengerjakan sesuai rentang itu. Kalau kamu minta tambahan, admin menawarkan rentang berikutnya dan baru dikerjakan setelah kamu setuju. Harga tidak naik sepihak.</p></details></div>
+    <div class="rv"><details><summary>Apa itu kode promo, dan siapa yang bisa memakainya?</summary><p>Ada promo untuk 5 pelanggan pertama. Tiga pelanggan pertama dengan kode dari kami dapat diskon 20%, dua pelanggan berikutnya dapat diskon 15%. Keduanya berlaku untuk semua layanan dan revisi sepuasnya sampai ACC. Kuota dihitung saat pembayaranmu dikonfirmasi, jadi kode yang kuotanya sudah habis tidak bisa dipakai lagi.</p></details></div>
+    <div class="rv"><details><summary>Bagaimana aturan revisi?</summary><p>Laporan dan makalah: revisi pertama gratis dalam 24 jam, revisi kedua Rp 15.000. PPT: Rp 10.000 per revisi sampai disetujui. Pelanggan promo mendapat revisi sepuasnya sampai ACC.</p></details></div>
+    <div class="rv"><details><summary>Bagaimana kalau guru punya format sendiri?</summary><p>Pilih &quot;Aturan dari guru atau sekolah&quot; di form, lalu tulis ketentuannya. Kalau ada contoh file, kirim lewat WhatsApp.</p></details></div>
+    <div class="rv"><details><summary>Apakah data dan bukti pembayaran saya aman?</summary><p>Nama, NIS, logo, dan nama sekolah hanya dipakai untuk mengerjakan pesananmu. Bukti pembayaran disimpan tertutup dan hanya dilihat admin untuk mencocokkan pembayaran. Kamu boleh memakai inisial di form.</p></details></div>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap">
+  <div>
+    <a class="logo" href="#">
+      <img data-logo alt="Logo FixYourPaper.id" onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+      <b class="mark" hidden>FYP</b>
+      <span>FixYourPaper.id</span>
+    </a>
+    <p>Jasa pengerjaan dan perbaikan tugas sekolah untuk siswa SMP, SMA, dan SMK.</p>
+  </div>
+  <p>© 2026 FixYourPaper.id</p>
+</div><i id="end"></i></footer>
+
+<dialog id="rc" aria-label="Ringkasan pesanan"><div class="rcw"><div class="slot"></div><div class="pw" id="pw"></div>
+  <div class="bx rq" id="rq" hidden><b>Sudah melakukan pembayaran?</b><span>Pilih "Iya", lalu pilih foto bukti pembayaranmu dari galeri. Tanpa bukti, konfirmasi tidak diproses.</span><span class="rqm" id="rqm"></span></div>
+  <div class="rbt"><button class="btn sand" type="button" id="rb">Ubah pesanan</button><button class="btn" type="button" id="rk">Kirim ke WhatsApp</button><button class="btn sand" type="button" id="pn" hidden>Belum</button><button class="btn" type="button" id="py" hidden>Iya, sudah bayar</button></div></div></dialog>
+<input type="file" class="vh" id="pf" accept="image/*" tabindex="-1" aria-hidden="true">
+<dialog id="fd" aria-label="Format bawaan"><div class="bx fdw"><div class="fdh"><h3>Format bawaan kami</h3><button class="btn sand" type="button" id="fx" style="padding:9px 14px">Tutup</button></div>
+  <div class="tabs" role="tablist"><button type="button" role="tab" data-d="laporan" aria-selected="true">Laporan</button><button type="button" role="tab" data-d="makalah" aria-selected="false">Makalah</button></div>
+  <div id="fdc"></div></div></dialog>
+<div class="ts" id="ts" role="status" hidden></div>
+
+<a class="btn wa" data-wa target="_blank" rel="noopener" aria-label="Chat admin lewat WhatsApp"><svg class="ic"><use href="#i-chat"/></svg></a>
+
+<script>
+/* ===== PENGATURAN: ubah di sini saja ===== */
+const LOGO = 'logo.png';      // nama file + format logo (taruh satu folder dengan index.html)
+const LOGO_DARK = '';         // opsional: logo khusus mode gelap, mis. 'logo-gelap.png'
+const WA = '6281234567890';   // nomor WhatsApp admin, format 62...
+const SB_URL = 'https://xgyjotljmrkopvfrfeha.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhneWpvdGxqbXJrb3B2ZnJmZWhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQzNjEyMDksImV4cCI6MjEwOTkzNzIwOX0.NkOhhtW-6hbpb8wfJfaD8O9cvud2LAzWFkNLZYx06Qk';
+/* ========================================= */
+
+const $ = id => document.getElementById(id);
+const CAP = {makalah:2, ppt:2, poster:3, rapihin:5};
+const ZERO = {makalah:0, ppt:0, poster:0, rapihin:0};
+const BOARD = [['makalah','Makalah dan laporan'],['ppt','Presentasi PPT'],['poster','Poster'],['rapihin','Perbaikan dokumen']];
+let slots = {...ZERO}, sb = null, today = '', manual = null, lastAuto = null;
+
+/* ---------- jam Jakarta ---------- */
+function jkt(){
+  const d = new Date(), o = {timeZone:'Asia/Jakarta'};
+  const time = d.toLocaleTimeString('en-GB', {...o, hourCycle:'h23'});
+  return {
+    time, h:+time.slice(0,2),
+    date:d.toLocaleDateString('sv-SE', o),
+    label:d.toLocaleDateString('id-ID', {...o, weekday:'long', day:'numeric', month:'long', year:'numeric'})
+  };
+}
+const isNight = h => h >= 18 || h < 6;
+
+function applyTheme(dark){
+  document.documentElement.classList.toggle('dark', dark);
+  $('tgi').setAttribute('href', dark ? '#i-sun' : '#i-moon');
+  document.querySelectorAll('[data-logo]').forEach(i => {
+    i.hidden = false; i.nextElementSibling.hidden = true;
+    i.src = dark && LOGO_DARK ? LOGO_DARK : LOGO;
+  });
+}
+function tick(){
+  const t = jkt();
+  $('dt').textContent = t.label; $('tm').textContent = t.time;
+  const a = isNight(t.h);
+  if (a !== lastAuto){ lastAuto = a; manual = null; applyTheme(a); }   // ganti otomatis jam 06.00 dan 18.00
+  if (t.date !== today){ today = t.date; loadQuota(); }                // ganti hari, slot kembali ke 0
+}
+
+/* ---------- aturan slot ---------- */
+// '' = buka, 'full' = penuh, selain itu = alasan tutup
+function lock(k){
+  const s = slots;
+  if (s[k] >= CAP[k]) return 'full';
+  if (k === 'ppt' && s.makalah >= CAP.makalah) return 'slot makalah dan laporan sudah penuh';
+  if (k === 'rapihin' && s.makalah > 0) return 'hari ini sudah ada pesanan makalah atau laporan baru';
+  return '';
+}
+function renderBoard(){
+  $('board').innerHTML = BOARD.map(([k,n]) => {
+    const r = lock(k), left = CAP[k] - slots[k];
+    const sq = Array.from({length:CAP[k]}, (_,i) => `<i class="${i<slots[k]?'f':''}"></i>`).join('');
+    const st = r === '' ? `<span class="ok">Buka, sisa ${left} slot</span>`
+             : r === 'full' ? `<span class="no">Penuh</span>`
+             : `<span class="no">Tutup:</span> ${r}`;
+    return `<div class="row"><b>${n}</b><span class="sq" aria-hidden="true">${sq}</span><span class="s">${st}</span></div>`;
+  }).join('');
+  calc();
+}
+
+/* ---------- kuota (Supabase, cadangan localStorage) ---------- */
+async function readRemote(){
+  const {data, error} = await sb.from('fyp_daily_slots').select('slots').eq('date', today).maybeSingle();
+  if (error) throw error;
+  return {...ZERO, ...(data && data.slots)};
+}
+async function loadQuota(){
+  if (sb){ try { slots = await readRemote(); renderBoard(); return; } catch(e){} }
+  try { slots = {...ZERO, ...JSON.parse(localStorage.getItem('fyp_slots_'+today))}; } catch(e){ slots = {...ZERO}; }
+  renderBoard();
+}
+function bumpLocal(k){ slots[k]++; try { localStorage.setItem('fyp_slots_'+today, JSON.stringify(slots)); } catch(e){} renderBoard(); }
+
+/* ---------- form ---------- */
+const TIER = [30,45,60,75,90,105,120], T0 = 100000, TSTEP = 45000;  // harga dasar, tambahan tiap rentang 15 halaman
+const tierLabel = i => i === 0 ? 'Sampai 30 halaman' : `${TIER[i-1]+1}–${TIER[i]} halaman`;
+const tierPrice = i => T0 + i*TSTEP;
+const LM = {k:'makalah', tier:1, l:'Perkiraan jumlah halaman', h:'Pilih rentang. Rentang disepakati dengan admin sebelum pengerjaan dan tidak naik tanpa persetujuanmu.'};
+const SVC = {
+  laporan:LM, makalah:LM,
+  ppt:{k:'ppt', min:1, def:10, l:'Jumlah slide', h:'Rp 3.000 per slide.', u:'slide', f:p => p*3000},
+  poster:{k:'poster', min:1, def:1, l:'Jumlah desain poster', h:'Rp 15.000 per desain.', u:'desain', f:p => p*15000},
+  rapihin:{k:'rapihin', min:1, def:1, l:'Jumlah file dokumen', h:'Rp 15.000 per file.', u:'file', f:p => p*15000}
+};
+const JN = ['SMP / MTs','SMA / SMK / MA'];
+const SVL = {laporan:'Laporan', makalah:'Makalah', ppt:'Presentasi PPT', poster:'Poster', rapihin:'Perbaikan dokumen'};
+const PCT = {TUGASLO:20, HEMAT:15};
+const rp = n => 'Rp ' + n.toLocaleString('id-ID');
+const esc = t => String(t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pages = () => { const s = SVC[$('svc').value]; return Math.min(200, Math.max(s.min, parseInt($('pg').value) || s.min)); };
+const speedTxt = o => o.ex ? 'Express, 4–6 jam' : 'Biasa, 1–2 hari';
+const fmtTxt = o => o.fm === 'd' ? 'Format bawaan' : 'Aturan guru: ' + (o.cr || 'dikirim di chat');
+let promo = null;   // {code, pct, seq}
+
+function price(o, pct){
+  const s = SVC[o.sv], x = o.ex ? 25000 : 0;
+  const base = s.tier ? tierPrice(o.qy) : s.f(o.qy), total = base + x, disc = pct ? Math.round(total*pct/100) : 0;
+  return {qty:s.tier ? tierLabel(o.qy) : o.qy+' '+s.u, base, x, total, disc, pay:total-disc};
+}
+function formOrd(){
+  const sv = $('svc').value, s = SVC[sv];
+  return {sv, qy:s.tier ? +$('tier').value : pages(), ex:$('sp').value === 'e' ? 1 : 0, fm:$('ft').value,
+    nm:$('nama').value.trim().slice(0,40), jn:$('jen').selectedIndex, cr:$('cr').value.trim().slice(0,300), pc:promo ? promo.code : ''};
+}
+function onSvc(){
+  const s = SVC[$('svc').value];
+  $('tier').hidden = !s.tier; $('stw').hidden = !!s.tier;
+  $('pgl').htmlFor = s.tier ? 'tier' : 'pg'; $('pgl').textContent = s.l; $('pgh').textContent = s.h;
+  if (!s.tier) $('pg').value = s.def;
+  calc();
+}
+function calc(){
+  const s = SVC[$('svc').value], r = lock(s.k), closed = r !== '';
+  const q = price(formOrd(), promo ? promo.pct : 0);
+  $('tt').textContent = rp(q.pay);
+  $('was').hidden = !promo; $('was').textContent = promo ? rp(q.total) : '';
+  $('trev').innerHTML = promo ? 'Revisi sepuasnya<br>sampai disetujui' : 'Revisi pertama gratis,<br>revisi kedua Rp 15.000';
+  $('sb').disabled = closed;
+  $('sbt').textContent = closed ? 'Slot layanan ini sedang tidak tersedia' : 'Lihat ringkasan pesanan';
+  $('al').hidden = !closed;
+  if (closed) $('al').textContent = r === 'full' ? 'Slot layanan ini sudah penuh hari ini. Pilih layanan lain atau coba lagi besok setelah pukul 00.00 WIB.' : 'Layanan ini sedang tutup karena ' + r + '.';
+}
+
+/* ---------- kode promo (dicek di server, kodenya tidak ada di file ini) ---------- */
+async function applyPromo(){
+  const code = $('pcd').value.trim(), m = $('pcm'); promo = null;
+  if (!code){ m.textContent = 'Masukkan kodenya dulu.'; return calc(); }
+  if (!sb){ m.textContent = 'Kode promo belum bisa dicek sekarang. Coba lagi nanti.'; return calc(); }
+  m.textContent = 'Mengecek kode…';
+  try {
+    const {data, error} = await sb.rpc('promo_check', {p_code:code});
+    if (error) throw error;
+    if (data.ok){ promo = {code:code.toUpperCase(), pct:data.pct, seq:data.seq}; m.textContent = `Kode berlaku: diskon ${data.pct}% dan revisi sepuasnya sampai disetujui. Kamu pelanggan promo ke-${data.seq} dari 5.`; }
+    else m.textContent = data.why === 'habis' ? 'Kuota untuk kode ini sudah habis.' : 'Kode tidak dikenali.';
+  } catch(e){ m.textContent = 'Kode promo belum bisa dicek sekarang. Coba lagi nanti.'; }
+  calc();
+}
+
+/* ---------- struk ---------- */
+let pending = null, tmr;
+function toast(m){ const e = $('ts'); e.textContent = m; e.hidden = false; clearTimeout(tmr); tmr = setTimeout(() => { e.hidden = true; }, 9000); }
+const enc = o => btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+const dec = t => JSON.parse(decodeURIComponent(escape(atob(t.replace(/-/g,'+').replace(/_/g,'/')))));
+function clean(x){
+  if (!x || !SVC[x.sv] || !/^FYP-[0-9A-Z-]{3,20}$/.test(x.r)) return null;
+  const s = SVC[x.sv], q = parseInt(x.qy) || 0;
+  return {r:x.r, sv:x.sv, nm:String(x.nm||'').slice(0,40), jn:x.jn ? 1 : 0, ex:x.ex ? 1 : 0, fm:x.fm === 'c' ? 'c' : 'd', pc:String(x.pc||'').slice(0,30),
+    qy:s.tier ? Math.min(TIER.length-1, Math.max(0,q)) : Math.min(200, Math.max(s.min,q))};
+}
+const doneKey = r => 'fyp_done_' + r;
+function countUp(el, to){
+  if (matchMedia('(prefers-reduced-motion:reduce)').matches){ el.textContent = rp(to); return; }
+  const t0 = performance.now() + 750, d = 900;
+  (function f(n){
+    const p = Math.min(1, Math.max(0, (n - t0) / d));
+    el.textContent = rp(Math.round(to * (1 - Math.pow(1-p, 3))));
+    if (p < 1) requestAnimationFrame(f);
+  })(performance.now());
+}
+function showReceipt(o, mode, pr){
+  const s = SVC[o.sv], q = price(o, pr ? pr.pct : 0), dp = Math.ceil(q.pay/2), t = jkt(); let n = 0;
+  const ln = (a, b) => `<div class="ln" style="--n:${n++}"><span>${a}</span><b>${esc(b)}</b></div>`;
+  const rows = [['Nama',o.nm],['Jenjang',JN[o.jn]],['Layanan',SVL[o.sv]],[s.tier?'Rentang':'Jumlah',q.qty],['Format',fmtTxt(o)],['Waktu',speedTxt(o)]];
+  pending = {o, pr, q, dp, mode};
+  $('pw').innerHTML = `<div class="paper"><span class="stamp">Belum dibayar</span>
+    <div class="rh"><b>FixYourPaper.id</b><span>${mode === 'pay' ? 'Konfirmasi pembayaran' : 'Ringkasan pesanan'}</span><small>${t.label}, ${t.time.slice(0,5)} WIB</small><small>Ref ${o.r}</small></div><hr class="dsh">
+    ${rows.map(r => ln(...r)).join('')}<hr class="dsh">
+    ${ln('Harga layanan', rp(q.base))}${q.x ? ln('Express', rp(q.x)) : ''}${pr ? ln(`Promo ke-${pr.seq}/5, ${pr.pct}%`, '-' + rp(q.disc)) + ln('Revisi', 'Sepuasnya sampai ACC') : ''}
+    <div class="tl" style="--n:${n++}"><span>Total</span><b id="rtot">Rp 0</b></div><hr class="dsh">
+    ${ln('DP 50% (di awal)', rp(dp))}${ln('Sisa (draf cocok)', rp(q.pay - dp))}
+    <div class="bar"></div>
+    <p class="rnote">Harga akhir dikonfirmasi admin di WhatsApp. ${s.tier ? 'Rentang halaman tidak berubah tanpa persetujuanmu.' : ''}</p></div>`;
+  ['rb','rk'].forEach(i => { $(i).hidden = mode === 'pay'; });
+  ['py','pn','rq'].forEach(i => { $(i).hidden = mode !== 'pay'; });
+  $('rqm').textContent = '';
+  if (!$('rc').open) $('rc').showModal();
+  countUp($('rtot'), q.pay);
+}
+async function openReceipt(e){
+  e.preventDefault();
+  if (lock(SVC[$('svc').value].k) !== '') return;
+  if ($('pcd').value.trim() && !promo) await applyPromo();
+  if ($('pcd').value.trim() && !promo){ $('pcm').scrollIntoView({block:'center'}); return; }
+  const o = formOrd(), t = jkt();
+  o.r = 'FYP-' + t.date.slice(8) + t.date.slice(5,7) + '-' + Math.random().toString(36).slice(2,5).toUpperCase().padEnd(3,'X');
+  showReceipt(o, 'draft', promo);
+}
+
+/* langkah 1: kirim struk ke WhatsApp, slot belum terisi */
+function sendDraft(){
+  if (!pending || pending.mode !== 'draft') return;
+  const {o, pr, q, dp} = pending, s = SVC[o.sv];
+  if (lock(s.k) !== ''){ $('rc').close(); calc(); return; }
+  const link = location.href.split('#')[0].split('?')[0] + '#bayar=' + enc({r:o.r, sv:o.sv, qy:o.qy, ex:o.ex, fm:o.fm, nm:o.nm, jn:o.jn, pc:pr ? o.pc : ''});
+  const msg = ['Halo admin FixYourPaper.id, saya sudah cek ringkasan pesanan di situs dan mau lanjut:','',
+    ...(pr ? [`Saya adalah pelanggan ke-${pr.seq} dari 5 yang memakai promo (diskon ${pr.pct}%, revisi sepuasnya sampai ACC).`,''] : []),
+    'Kode referensi: ' + o.r, 'Nama: ' + o.nm, 'Jenjang: ' + JN[o.jn], 'Layanan: ' + SVL[o.sv],
+    (s.tier ? 'Rentang halaman: ' : 'Jumlah: ') + q.qty, 'Format: ' + fmtTxt(o), 'Waktu: ' + speedTxt(o),
+    ...(pr ? ['Kode promo: ' + o.pc, 'Diskon: -' + rp(q.disc)] : []),
+    'Total: ' + rp(q.pay), 'DP 50%: ' + rp(dp), '',
+    'Konfirmasi pembayaran (buka saat admin meminta, lalu unggah bukti):', link].join('\n');
+  window.open('https://wa.me/' + WA + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+  pending = null; $('rc').close();
+  toast('Struk terkirim ke WhatsApp. Slot terisi setelah kamu konfirmasi pembayaran lewat link di chat.');
+}
+
+/* langkah 2: link di chat membuka konfirmasi pembayaran */
+async function checkHash(){
+  const m = location.hash.match(/^#bayar=([\w-]+)$/); if (!m) return;
+  let o = null; try { o = clean(dec(m[1])); } catch(e){}
+  if (!o) return toast('Link konfirmasi tidak valid.');
+  try { if (localStorage.getItem(doneKey(o.r))) return toast('Pesanan ini sudah dikonfirmasi sebelumnya.'); } catch(e){}
+  let pr = null;
+  if (o.pc && sb){ try { const {data} = await sb.rpc('promo_check', {p_code:o.pc}); if (data && data.ok) pr = {code:o.pc, pct:data.pct, seq:data.seq}; } catch(e){} }
+  if (o.pc && !pr) toast('Kode promo sudah tidak berlaku, jadi harga kembali normal.');
+  showReceipt(o, 'pay', pr);
+}
+function clearHash(){ history.replaceState(null, '', location.pathname + location.search); }
+function payNo(){   // "Belum": reset pembayaran, kode promo, dan harga
+  promo = null; pending = null; $('pcd').value = ''; $('pcm').textContent = '';
+  $('rc').close(); clearHash(); calc();
+  toast('Pembayaran belum dikonfirmasi. Kode promo dan harga sudah direset.');
+}
+async function payYes(){
+  const f = $('pf').files[0]; $('pf').value = '';
+  if (!f || !pending) return;
+  if (!/^image\//.test(f.type) || f.size > 8e6){ $('rqm').textContent = 'Pilih foto atau tangkapan layar, maksimal 8 MB.'; return; }
+  const {o, pr} = pending, s = SVC[o.sv]; $('py').disabled = $('pn').disabled = true; $('py').textContent = 'Memproses…'; $('rqm').textContent = '';
+  let up = false, res = null;
+  if (sb){
+    try { const ext = (f.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,5) || 'jpg';
+      const {error} = await sb.storage.from('bukti').upload(`${o.r}-${Date.now()}.${ext}`, f, {contentType:f.type}); up = !error; } catch(e){}
+    try { const {data, error} = await sb.rpc('confirm_order', {p_ref:o.r, p_svc:s.k, p_code:pr ? o.pc : ''}); if (!error) res = data; } catch(e){}
+  }
+  if (!res) bumpLocal(s.k); else loadQuota();
+  const fp = res && res.promo ? {pct:PCT[res.promo], seq:res.seq} : null, q = price(o, fp ? fp.pct : 0), dp = Math.ceil(q.pay/2);
+  const msg = ['Saya sudah konfirmasi pembayaran.','',
+    ...(fp ? [`Saya adalah pelanggan ke-${fp.seq} dari 5 yang memakai promo (diskon ${fp.pct}%, revisi sepuasnya sampai ACC).`,''] : []),
+    ...(pr && !fp ? ['Catatan: kode promo tidak berlaku karena kuota sudah habis atau belum terverifikasi, jadi harga normal.',''] : []),
+    'Kode referensi: ' + o.r, 'Nama: ' + o.nm, 'Layanan: ' + SVL[o.sv], (s.tier ? 'Rentang halaman: ' : 'Jumlah: ') + q.qty,
+    'Total: ' + rp(q.pay), 'Pembayaran DP 50%: ' + rp(dp),
+    up ? 'Bukti pembayaran sudah saya unggah lewat situs.' : 'Bukti pembayaran saya kirim langsung di chat ini.'].join('\n');
+  try { localStorage.setItem(doneKey(o.r), '1'); } catch(e){}
+  pending = null; promo = null; clearHash();
+  $('py').disabled = $('pn').disabled = false; $('py').textContent = 'Iya, sudah bayar'; $('rc').close();
+  location.href = 'https://wa.me/' + WA + '?text=' + encodeURIComponent(msg);
+}
+
+/* ---------- format bawaan ---------- */
+const TEK = 'Margin kiri 4 cm, atas, kanan, dan bawah 3 cm';
+const FMT = {
+  laporan:[
+    ['Bagian awal',['Cover','Lembar pengesahan (bila diminta guru)','Kata pengantar','Daftar isi','Daftar tabel, gambar, dan lampiran']],
+    ['Isi',['Bab I Pendahuluan: latar belakang, rumusan masalah, tujuan, manfaat','Bab II Landasan teori: kajian pustaka, alat dan bahan','Bab III Metode: prosedur, waktu, tempat, langkah kerja','Bab IV Hasil dan pembahasan: data dan analisis','Bab V Penutup: kesimpulan dan saran']],
+    ['Bagian akhir dan teknis',['Daftar pustaka dan lampiran','Kertas A4 atau F4','Times New Roman 12 pt, spasi 1,5',TEK,'Nomor halaman romawi (i, ii) di bagian awal, angka (1, 2) mulai Bab I']]
+  ],
+  makalah:[
+    ['Bagian awal',['Cover (judul, logo, nama, sekolah, tahun)','Kata pengantar','Daftar isi','Daftar tabel dan gambar (opsional)']],
+    ['Isi',['Bab I Pendahuluan: latar belakang, rumusan masalah, tujuan, manfaat','Bab II Pembahasan: kajian teori dan analisis topik','Bab III Penutup: kesimpulan dan saran']],
+    ['Bagian akhir dan teknis',['Daftar pustaka (buku, jurnal, artikel)','Lampiran foto atau dokumen pendukung','Kertas A4, Times New Roman 12 pt (atau Arial 11 pt), spasi 1,5',TEK]]
+  ]
+};
+const fmtCards = t => FMT[t].map(([h,l]) => `<div class="bx fm"><h3>${h}</h3><ul>${l.map(x => `<li>${x}</li>`).join('')}</ul></div>`).join('');
+function showFmt(t){
+  $('fmt').innerHTML = fmtCards(t);
+  document.querySelectorAll('[data-t]').forEach(b => b.setAttribute('aria-selected', b.dataset.t === t));
+}
+function showFd(t){
+  $('fdc').innerHTML = fmtCards(t);
+  document.querySelectorAll('[data-d]').forEach(b => b.setAttribute('aria-selected', b.dataset.d === t));
+}
+
+/* ---------- animasi: per kata naik, ulang tiap sampai di dasar halaman ---------- */
+function initMotion(){
+  document.querySelectorAll('[data-w]').forEach(el => {
+    const txt = el.textContent.trim();
+    el.setAttribute('aria-label', txt);
+    el.innerHTML = txt.split(/\s+/).map((w,i) => `<span class="w" aria-hidden="true"><span style="--i:${i}">${w}</span></span>`).join(' ');
+  });
+  const els = [...document.querySelectorAll('[data-w],.rv')];
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target); }
+  }), {threshold:.15, rootMargin:'0px 0px -8% 0px'});
+  els.forEach(el => io.observe(el));
+  // sampai di dasar halaman: reset semua yang sedang di luar layar supaya main lagi saat discroll ulang
+  new IntersectionObserver(es => {
+    if (!es[0].isIntersecting) return;
+    els.forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > innerHeight){ el.classList.remove('on'); io.observe(el); }
+    });
+  }).observe($('end'));
+}
+
+/* ---------- ulasan pelanggan ---------- */
+let stars = 0;
+const starStr = n => '★'.repeat(n) + '☆'.repeat(5-n);
+function setStars(n){
+  stars = n;
+  document.querySelectorAll('#stars button').forEach((b,i) => { b.textContent = i < n ? '★' : '☆'; b.setAttribute('aria-checked', i+1 === n); });
+}
+async function loadReviews(){
+  const list = $('rvl'), sum = $('rvs'); let rows = [];
+  if (sb){ try {
+    const {data, error} = await sb.from('fyp_reviews').select('name,rating,comment,created_at').eq('approved', true).order('created_at', {ascending:false}).limit(50);
+    if (!error && data) rows = data;
+  } catch(e){} }
+  list.textContent = '';
+  if (!rows.length){ sum.textContent = 'Belum ada ulasan yang tampil.'; return; }
+  const avg = rows.reduce((a,r) => a + r.rating, 0) / rows.length;
+  sum.textContent = `${avg.toFixed(1).replace('.',',')} dari 5, dari ${rows.length} ulasan`;
+  rows.slice(0,6).forEach(r => {
+    const d = document.createElement('div'); d.className = 'rvi';
+    const h = document.createElement('div'); h.className = 'rvh';
+    const b = document.createElement('b'); b.textContent = r.name || 'Pelanggan';
+    const st = document.createElement('span'); st.className = 'st'; st.textContent = starStr(r.rating); st.setAttribute('aria-label', r.rating + ' dari 5 bintang');
+    h.append(b, st); d.append(h);
+    if (r.comment){ const p = document.createElement('p'); p.textContent = r.comment; d.append(p); }
+    list.append(d);
+  });
+}
+async function sendReview(e){
+  e.preventDefault();
+  const say = t => { $('rvm').textContent = t; };
+  if ($('hp').value) return;
+  if (!stars) return say('Pilih jumlah bintang dulu.');
+  try { if (Date.now() - (+localStorage.getItem('fyp_rv_t') || 0) < 60000) return say('Tunggu sebentar sebelum mengirim ulasan lagi.'); } catch(x){}
+  if (!sb) return say('Ulasan belum bisa dikirim sekarang. Coba lagi nanti.');
+  $('rvb').disabled = true; say('Mengirim…');
+  let error = null;
+  try { ({error} = await sb.from('fyp_reviews').insert({name:$('rvn').value.trim().slice(0,40) || 'Pelanggan', rating:stars, comment:$('rvc').value.trim().slice(0,300)})); } catch(x){ error = x; }
+  $('rvb').disabled = false;
+  if (error) return say('Ulasan belum terkirim. Coba lagi sebentar lagi.');
+  $('rvf').reset(); setStars(0); say('Terima kasih. Ulasanmu akan tampil setelah dicek admin.');
+  try { localStorage.setItem('fyp_rv_t', Date.now()); } catch(x){}
+}
+
+/* ---------- mulai ---------- */
+addEventListener('DOMContentLoaded', () => {
+  try { if (window.supabase) sb = supabase.createClient(SB_URL, SB_KEY); } catch(e){}
+  const wa = document.querySelector('[data-wa]');
+  wa.href = 'https://wa.me/' + WA + '?text=' + encodeURIComponent('Halo admin FixYourPaper.id, saya mau tanya soal jasa tugas.');
+  $('tg').onclick = () => { manual = !document.documentElement.classList.contains('dark'); applyTheme(manual); };
+  $('svc').onchange = onSvc;
+  $('sp').onchange = calc;
+  $('pg').oninput = calc;
+  $('pg').onchange = () => { $('pg').value = pages(); calc(); };
+  $('mn').onclick = () => { $('pg').value = Math.max(SVC[$('svc').value].min, pages() - 1); calc(); };
+  $('pl').onclick = () => { $('pg').value = Math.min(200, pages() + 1); calc(); };
+  $('ft').onchange = () => { $('cbox').hidden = $('ft').value !== 'c'; };
+  $('tier').innerHTML = TIER.map((_,i) => `<option value="${i}">${tierLabel(i)} — ${rp(tierPrice(i))}</option>`).join('');
+  $('tiers').innerHTML = [1,2,3].map(i => `<li><span>${tierLabel(i)}</span><span>${rp(tierPrice(i))}</span></li>`).join('') + `<li>dan seterusnya, +${rp(TSTEP)} tiap 15 halaman</li>`;
+  $('tier').onchange = calc;
+  $('f').onsubmit = openReceipt;
+  $('rk').onclick = sendDraft;
+  $('py').onclick = () => $('pf').click();
+  $('pn').onclick = payNo;
+  $('pf').onchange = payYes;
+  $('pca').onclick = applyPromo;
+  $('pcd').oninput = () => { promo = null; $('pcm').textContent = ''; calc(); };
+  $('pcd').onkeydown = e => { if (e.key === 'Enter'){ e.preventDefault(); applyPromo(); } };
+  $('fl').onclick = () => { showFd($('svc').value === 'makalah' ? 'makalah' : 'laporan'); $('fd').showModal(); };
+  $('fx').onclick = () => $('fd').close();
+  $('fd').addEventListener('click', e => { if (e.target === $('fd')) $('fd').close(); });
+  document.querySelectorAll('[data-d]').forEach(b => b.onclick = () => showFd(b.dataset.d));
+  addEventListener('hashchange', checkHash);
+  $('rb').onclick = () => $('rc').close();
+  $('rc').addEventListener('click', e => { if (e.target === $('rc')) $('rc').close(); });
+  $('mb').onclick = () => { const o = $('lk').classList.toggle('open'); $('mb').setAttribute('aria-expanded', o); };
+  $('lk').onclick = e => { if (e.target.tagName === 'A'){ $('lk').classList.remove('open'); $('mb').setAttribute('aria-expanded', false); } };
+  $('stars').innerHTML = [1,2,3,4,5].map(n => `<button type="button" role="radio" aria-checked="false" aria-label="${n} bintang" data-n="${n}">☆</button>`).join('');
+  $('stars').onclick = e => { const b = e.target.closest('button'); if (b) setStars(+b.dataset.n); };
+  $('rvf').onsubmit = sendReview;
+  document.querySelectorAll('[data-s]').forEach(b => b.addEventListener('click', () => { $('svc').value = b.dataset.s; onSvc(); }));
+  document.querySelectorAll('[data-t]').forEach(b => b.onclick = () => showFmt(b.dataset.t));
+  showFmt('laporan'); onSvc(); tick(); initMotion(); loadReviews(); checkHash();
+  setInterval(tick, 1000);
+  setInterval(loadQuota, 60000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) loadQuota(); });
+});
+</script>
+</body>
+</html>
